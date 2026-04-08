@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SpinAnchor is a real-time collaborative markdown wiki with git-backed storage. See `plan/architecture.md` for the full architecture and `plan/feasibility-study.md` for the research backing.
+spinanchor is a real-time collaborative markdown wiki with git-backed storage. See `plan/architecture.md` for the full architecture and `plan/feasibility-study.md` for the research backing.
 
 ## Key Files
 
@@ -24,6 +24,8 @@ SpinAnchor is a real-time collaborative markdown wiki with git-backed storage. S
 - **Tests are mandatory.** Every feature needs tests. Use Vitest.
 - **Conventional commits.** `issue-type(scope):` e.g. `123-feat(scope):`, `124-fix(scope):`, `125-chore(scope):`, etc.
 - **BlueOak Model License 1.0.0.** All contributions are under this license.
+- **No session links in commits.** Do not append Claude Code session URLs to commit messages or PR descriptions.
+- **PR reviewer.** Always request review from `torynet` on pull requests.
 
 ## Tech Stack Quick Reference
 

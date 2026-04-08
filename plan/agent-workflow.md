@@ -1,6 +1,6 @@
 # Agent Workflow Guide
 
-How to use Claude agents to implement SpinAnchor.
+How to use Claude agents to implement spinanchor.
 
 ## Project Management Model
 

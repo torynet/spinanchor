@@ -7,7 +7,7 @@ Decisions that need to be made before or during implementation. Each entry descr
 ### D-001: Project Name
 
 **Status**: Resolved
-**Decision**: SpinAnchor
+**Decision**: spinanchor
 
 ### D-002: Public or Private Repo
 

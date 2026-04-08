@@ -1,4 +1,4 @@
-# SpinAnchor
+# spinanchor
 
 A real-time collaborative markdown wiki with git-backed storage.
 

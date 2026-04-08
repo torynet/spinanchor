@@ -6,7 +6,7 @@ These instructions should be executed in order. They assume `gh` CLI is authenti
 
 ```bash
 # Create the project
-gh project create --owner torynet --title "SpinAnchor" --format TABLE
+gh project create --owner torynet --title "spinanchor" --format TABLE
 
 # Note the project number returned (e.g., 1). Use it in subsequent commands.
 PROJECT_NUM=<number>
