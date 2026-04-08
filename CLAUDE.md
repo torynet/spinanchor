@@ -24,6 +24,7 @@ spinanchor is a real-time collaborative markdown wiki with git-backed storage. S
 - **Tests are mandatory.** Every feature needs tests. Use Vitest.
 - **Conventional commits.** `issue-type(scope):` e.g. `123-feat(scope):`, `124-fix(scope):`, `125-chore(scope):`, etc.
 - **BlueOak Model License 1.0.0.** All contributions are under this license.
+- **No session links in commits.** Do not append Claude Code session URLs to commit messages or PR descriptions.
 
 ## Tech Stack Quick Reference
 
