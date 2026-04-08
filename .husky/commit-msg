@@ -1,0 +1,143 @@
+#!/bin/sh
+
+# commit-msg hook
+# Validates conventional commit format and auto-injects GitHub issue numbers
+
+set -eu
+
+# Configuration
+COMMIT_MSG_FILE="$1"
+BRANCH_NAME=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+log_error() { echo -e "${RED}[COMMIT-MSG]${NC} $1" >&2; }
+log_info() { echo -e "${BLUE}[COMMIT-MSG]${NC} $1" >&2; }
+log_success() { echo -e "${GREEN}[COMMIT-MSG]${NC} $1" >&2; }
+
+# Read current commit message
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Skip validation for merge commits, revert commits, and emergency bypass
+case "$COMMIT_MSG" in
+    Merge\ branch* | Revert\ \"* | EMERGENCY:*)
+        log_info "Skipping validation for special commit type"
+        exit 0
+        ;;
+esac
+
+# Extract issue number from branch name (e.g., feature/123-description -> 123)
+ISSUE_NUMBER=""
+ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -o '[0-9]\+' | head -n1)
+
+# Validate conventional commit format
+validate_conventional_commit() {
+    local msg="$1"
+    
+    # Allow multi-line commits - just check the first line
+    local first_line=$(echo "$msg" | head -n1)
+    
+    # Conventional commit pattern: [issue-] type(scope): description
+    # Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+    # Pattern supports both formats:
+    # - With issue number: 123-feat: description OR 123-feat(scope): description
+    # - Without issue number: feat: description OR feat(scope): description
+    local type_pattern='(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)!?'
+
+    if ! echo "$first_line" | grep -qE "^([0-9]+-)?${type_pattern}(\([^)]+\))?: .{1,72}$"; then
+        log_error "Invalid conventional commit format!"
+        echo "" >&2
+        echo "Expected format: <type>[optional scope]: <description>" >&2
+        echo "" >&2
+        echo "Valid types:" >&2
+        echo "  feat:     New features" >&2
+        echo "  fix:      Bug fixes" >&2
+        echo "  docs:     Documentation changes" >&2
+        echo "  style:    Code style changes (formatting, etc.)" >&2
+        echo "  refactor: Code changes that neither fix bugs nor add features" >&2
+        echo "  test:     Adding or updating tests" >&2
+        echo "  chore:    Maintenance tasks" >&2
+        echo "  perf:     Performance improvements" >&2
+        echo "  ci:       CI/CD changes" >&2
+        echo "  build:    Build system changes" >&2
+        echo "  revert:   Reverting previous commits" >&2
+        echo "" >&2
+        echo "Examples:" >&2
+        echo "  42-feat: add user authentication" >&2
+        echo "  15-fix: resolve null pointer exception in login" >&2
+        echo "  8-docs(api): update API documentation" >&2
+        echo "" >&2
+        echo "Current first line: '$first_line'" >&2
+        return 1
+    fi
+    
+    return 0
+}
+
+# Check for breaking changes
+check_breaking_changes() {
+    local msg="$1"
+
+    # Check for BREAKING CHANGE footer
+    if echo "$msg" | grep -q 'BREAKING CHANGE:'; then
+        log_info "Breaking change detected - will trigger major version bump"
+        return 0
+    fi
+
+    # Check for ! after type/scope to indicate breaking change
+    local first_line=$(echo "$msg" | head -n1)
+    if echo "$first_line" | grep -q '!:'; then
+        log_info "Breaking change detected via ! syntax - will trigger major version bump"
+        return 0
+    fi
+
+    return 0
+}
+
+# Auto-inject issue number if found and not already present
+auto_inject_issue() {
+    local msg="$1"
+    local issue="$2"
+
+    if [ -n "$issue" ] && ! echo "$msg" | grep -q "^$issue-"; then
+        # Add issue reference as prefix to first line
+        local first_line=$(echo "$msg" | head -n1)
+        local rest_lines=$(echo "$msg" | tail -n +2)
+
+        # Inject issue number with dash separator before type
+        echo "$issue-$first_line" > "$COMMIT_MSG_FILE"
+        if [ -n "$rest_lines" ]; then
+            echo "" >> "$COMMIT_MSG_FILE"
+            echo "$rest_lines" >> "$COMMIT_MSG_FILE"
+        fi
+        log_success "Auto-injected issue $issue prefix"
+    fi
+}
+
+# Validate the commit message
+log_info "Validating commit message..."
+
+if ! validate_conventional_commit "$COMMIT_MSG"; then
+    echo "" >&2
+    echo "Use 'EMERGENCY: <message>' prefix to bypass validation if needed." >&2
+    exit 1
+fi
+
+# Check for breaking changes
+check_breaking_changes "$COMMIT_MSG"
+
+# Auto-inject issue number if available
+if [ -n "$ISSUE_NUMBER" ]; then
+    auto_inject_issue "$COMMIT_MSG" "$ISSUE_NUMBER"
+    log_success "Validated conventional commit format"
+else
+    log_info "No issue number found in branch name: $BRANCH_NAME"
+fi
+
+log_success "Commit message validation passed"
+exit 0
