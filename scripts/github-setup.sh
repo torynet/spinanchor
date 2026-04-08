@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# GitHub Setup Script for SpinAnchor
+# GitHub Setup Script for spinanchor
 # Prerequisites: gh CLI authenticated with access to torynet org
 # Usage: ./scripts/github-setup.sh
 
 REPO="torynet/spinanchor"
 
-echo "=== SpinAnchor GitHub Setup ==="
+echo "=== spinanchor GitHub Setup ==="
 echo ""
 
 # Verify gh auth
@@ -23,15 +23,15 @@ echo ""
 # Step 1: Create GitHub Project
 # ─────────────────────────────────────────────
 echo "=== Step 1: Creating GitHub Project ==="
-PROJECT_URL=$(gh project create --owner torynet --title "SpinAnchor" --format TABLE 2>&1) || true
+PROJECT_URL=$(gh project create --owner torynet --title "spinanchor" --format TABLE 2>&1) || true
 echo "Project: $PROJECT_URL"
 echo ""
 
 # Get the project number
 echo "Fetching project number..."
-PROJECT_NUM=$(gh project list --owner torynet --format json | jq -r '.projects[] | select(.title=="SpinAnchor") | .number')
+PROJECT_NUM=$(gh project list --owner torynet --format json | jq -r '.projects[] | select(.title=="spinanchor") | .number')
 if [ -z "$PROJECT_NUM" ]; then
-  echo "ERROR: Could not find SpinAnchor project number."
+  echo "ERROR: Could not find spinanchor project number."
   exit 1
 fi
 echo "✓ Project number: $PROJECT_NUM"

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SpinAnchor is a real-time collaborative markdown wiki with git-backed storage. See `plan/architecture.md` for the full architecture and `plan/feasibility-study.md` for the research backing.
+spinanchor is a real-time collaborative markdown wiki with git-backed storage. See `plan/architecture.md` for the full architecture and `plan/feasibility-study.md` for the research backing.
 
 ## Key Files
 

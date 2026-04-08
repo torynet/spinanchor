@@ -1,6 +1,6 @@
 # Phase 1 Issues
 
-Each section below defines a GitHub issue. Create these issues in the `torynet/spinanchor` repo and add them to the SpinAnchor project with Phase set to "Phase 1: Core MVP".
+Each section below defines a GitHub issue. Create these issues in the `torynet/spinanchor` repo and add them to the spinanchor project with Phase set to "Phase 1: Core MVP".
 
 Issues are ordered by dependency. Earlier issues should be completed before later ones where noted.
 
