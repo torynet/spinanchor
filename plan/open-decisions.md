@@ -25,7 +25,8 @@ Node 22+ is recommended because it includes built-in `node:sqlite`. If we need t
 
 ### D-004: Monorepo or Separate Packages
 
-**Status**: Unresolved
+**Status**: Resolved
+**Decision**: Monorepo with pnpm workspaces (`packages/server`, `packages/client`)
 **Blocker for**: Repo structure, build tooling
 
 The system has at least two distinct deliverables:
@@ -41,7 +42,8 @@ Options:
 
 ### D-005: Package Manager
 
-**Status**: Unresolved
+**Status**: Resolved
+**Decision**: pnpm
 **Blocker for**: Repo setup, CI, contributor docs
 
 Options:
@@ -53,7 +55,8 @@ Options:
 
 ### D-006: TypeScript Build Tooling
 
-**Status**: Unresolved
+**Status**: Resolved
+**Decision**: Vite for client, tsup for server (tsx for dev)
 **Blocker for**: Project setup
 
 Server-side and client-side have different build needs:
@@ -64,7 +67,8 @@ Server-side and client-side have different build needs:
 
 ### D-007: Testing Framework
 
-**Status**: Unresolved
+**Status**: Resolved
+**Decision**: Vitest
 **Blocker for**: Phase 1 implementation
 
 Options:
